@@ -407,7 +407,7 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
   memset(event, 0, sizeof(sensors_event_t));
 
   /* Read new data */
-  read();    
+  read();
 
   event->version   = sizeof(sensors_event_t);
   event->sensor_id = _sensorID;
