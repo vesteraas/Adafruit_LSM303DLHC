@@ -149,7 +149,7 @@ bool Adafruit_LSM303_Accel_Unified::begin()
   Wire.begin();
 
   // Enable the accelerometer (100Hz)
-  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, 0x57);
+  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, 0x77);
   
   // LSM303DLHC has no WHOAMI register so read CTRL_REG1_A back to check
   // if we are connected or not
@@ -160,6 +160,18 @@ bool Adafruit_LSM303_Accel_Unified::begin()
   }  
   
   return true;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Sets the accelerometer's data rate
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Accel_Unified::setAccelDataRate(lsm303AccelDataRate dataRate)
+{
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_ACCEL_CTRL_REG1_A, (byte)dataRate);
+
+  _accelDataRate = dataRate;
 }
 
 /**************************************************************************/
@@ -333,14 +345,9 @@ bool Adafruit_LSM303_Mag_Unified::begin()
   // Enable the magnetometer
   write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_MR_REG_M, 0x00);
 
-  // LSM303DLHC has no WHOAMI register so read CRA_REG_M to check
-  // the default value (0b00010000/0x10)
-  uint8_t reg1_a = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M);
-  if (reg1_a != 0x10)
-  {
-    return false;
-  }
-  
+  // Set the data rate to a known level
+  setMagDataRate(LSM303_MAGDATA_RATE_75);
+
   // Set the gain to a known level
   setMagGain(LSM303_MAGGAIN_1_3);
 
@@ -399,6 +406,18 @@ void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
       _lsm303Mag_Gauss_LSB_Z  = 205;
       break;
   } 
+}
+
+/**************************************************************************/
+/*!
+    @brief  Sets the magnetometer's data rate
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Mag_Unified::setMagDataRate(lsm303MagDataRate dataRate)
+{
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, (byte)dataRate);
+
+  _magDataRate = dataRate;
 }
 
 /**************************************************************************/

@@ -89,6 +89,21 @@
 /*=========================================================================*/
 
 /*=========================================================================
+    ACCELEROMETER DATA RATE SETTINGS
+    -----------------------------------------------------------------------*/
+    typedef enum
+    {
+      LSM303_ACCELDATA_RATE_1                   = 0x17,  // 1 Hz
+      LSM303_ACCELDATA_RATE_10                  = 0x27,  // 10 Hz
+      LSM303_ACCELDATA_RATE_25                  = 0x37,  // 25 Hz
+      LSM303_ACCELDATA_RATE_50                  = 0x47,  // 50 Hz
+      LSM303_ACCELDATA_RATE_100                 = 0x57,  // 100 Hz
+      LSM303_ACCELDATA_RATE_200                 = 0x67,  // 200 Hz
+      LSM303_ACCELDATA_RATE_400                 = 0x77,  // 400 Hz
+      LSM303_ACCELDATA_RATE_1344                = 0x97   // 1344 Hz
+    } lsm303AccelDataRate;
+
+/*=========================================================================
     MAGNETOMETER GAIN SETTINGS
     -----------------------------------------------------------------------*/
     typedef enum
@@ -100,7 +115,23 @@
       LSM303_MAGGAIN_4_7                        = 0xA0,  // +/- 4.7
       LSM303_MAGGAIN_5_6                        = 0xC0,  // +/- 5.6
       LSM303_MAGGAIN_8_1                        = 0xE0   // +/- 8.1
-    } lsm303MagGain;	
+    } lsm303MagGain;
+
+/*=========================================================================
+    MAGNETOMETER DATA RATE SETTINGS
+    -----------------------------------------------------------------------*/
+    typedef enum
+    {
+      LSM303_MAGDATA_RATE_0_75                   = 0x00,  // 0.75 Hz
+      LSM303_MAGDATA_RATE_1_5                    = 0x04,  // 1.5 Hz
+      LSM303_MAGDATA_RATE_3_0                    = 0x08,  // 3.0 Hz
+      LSM303_MAGDATA_RATE_7_5                    = 0x0C,  // 7.5 Hz
+      LSM303_MAGDATA_RATE_15                     = 0x10,  // 15 Hz
+      LSM303_MAGDATA_RATE_30                     = 0x14,  // 30 Hz
+      LSM303_MAGDATA_RATE_75                     = 0x18,  // 75 Hz
+      LSM303_MAGDATA_RATE_220                    = 0x1C   // 220 Hz
+    } lsm303MagDataRate;  
+
 /*=========================================================================*/
 
 /*=========================================================================
@@ -139,10 +170,12 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
     Adafruit_LSM303_Accel_Unified(int32_t sensorID = -1);
   
     bool begin(void);
+    void setAccelDataRate(lsm303AccelDataRate dataRate);
     void getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
   private:
+    lsm303AccelDataRate _accelDataRate;
     lsm303AccelData _accelData;   // Last read accelerometer data will be available here
     int32_t         _sensorID;
     
@@ -160,14 +193,16 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     bool begin(void);
     void enableAutoRange(bool enable);
     void setMagGain(lsm303MagGain gain);
+    void setMagDataRate(lsm303MagDataRate dataRate);
     void getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
   private:
-    lsm303MagGain   _magGain;
-    lsm303MagData   _magData;     // Last read magnetometer data will be available here
-    int32_t         _sensorID;
-    bool            _autoRangeEnabled;
+    lsm303MagGain     _magGain;
+    lsm303MagDataRate _magDataRate;
+    lsm303MagData     _magData;     // Last read magnetometer data will be available here
+    int32_t           _sensorID;
+    bool              _autoRangeEnabled;
     
     void write8(byte address, byte reg, byte value);
     byte read8(byte address, byte reg);
