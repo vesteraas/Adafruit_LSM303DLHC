@@ -149,16 +149,8 @@ bool Adafruit_LSM303_Accel_Unified::begin()
   Wire.begin();
 
   // Enable the accelerometer (100Hz)
-  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, 0x77);
-  
-  // LSM303DLHC has no WHOAMI register so read CTRL_REG1_A back to check
-  // if we are connected or not
-  uint8_t reg1_a = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A);
-  if (reg1_a != 0x57)
-  {
-    return false;
-  }  
-  
+  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, LSM303_ACCELDATA_RATE_100);
+
   return true;
 }
 
